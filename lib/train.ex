@@ -10,7 +10,7 @@ defmodule Unsmart.Train do
   end
 
   def test_data() do
-    test = (for n <- 1..15, do: [Fizz.mods(n)]) |> Nx.tensor
+    test = (for n <- 1..30, do: [Fizz.mods(n)]) |> Nx.tensor
     test
   end
 
