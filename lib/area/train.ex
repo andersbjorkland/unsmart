@@ -21,7 +21,6 @@ defmodule Unsmart.Area.Train do
     |> Axon.dense(20, activation: :relu)
     |> Axon.batch_norm()
     |> Axon.dropout(rate: 0.8)
-    |> Axon.dense(15, activation: :tanh)
     |> Axon.dense(10, activation: :softmax)
   end
 
@@ -67,20 +66,26 @@ defmodule Unsmart.Area.Train do
         Enum.map(coords, fn coord -> pad_list(coord, 0, targets_padding) end)
         |> List.flatten()
         |> list_wrapper()
-        |> Nx.tensor()
       end)
+      |> Nx.tensor()
 
     data = Stream.zip(train_data, targets_data)
 
     params = Axon.Loop.run(loop, data, %{}, iterations: 100, epochs: 5)
 
-    model
-    # test_data
+    test_data
     Axon.predict(model, params, test_data, debug: true)
   end
 
   def pad_list(list, _value, length) when length(list) == length, do: list
   def pad_list(list, value, length), do: pad_list([value | list], value, length)
+
+  def example(),
+    do: [
+      [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.4795618151080436e-16, 0.0]
+    ]
+
+  # Will need to chunk this example (from predict). Want to split it in half size
 
   defp list_wrapper(element), do: [element]
 end
